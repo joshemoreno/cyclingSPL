@@ -1,0 +1,34 @@
+<div class="container mt-5">
+    <h2>Gestión de Tickets para Recogida de Bicicletas</h2>
+  
+    <button class="btn btn-primary mb-3" (click)="openAddTicket()">Agregar Ticket</button>
+  
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Nombre del Cliente</th>
+          <th>Tipo de Bicicleta</th>
+          <th>Descripción del Problema</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (ticket of tickets; track $index) {
+            <tr>
+              <td>{{ ticket.id }}</td>
+              <td>{{ ticket.customerName }}</td>
+              <td>{{ ticket.bicycleType }}</td>
+              <td>{{ ticket.issueDescription }}</td>
+              <td>{{ ticket.status }}</td>
+              <td>
+                <button class="btn btn-warning btn-sm" (click)="openEditTicket(ticket)">Editar</button>
+                <button class="btn btn-danger btn-sm" (click)="deleteTicket(ticket.id)">Eliminar</button>
+              </td>
+            </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  

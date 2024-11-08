@@ -1,0 +1,17 @@
+h2 {
+    color: #007bff;
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  h4 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .container .row {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+  

@@ -1,1 +1,35 @@
-<p>data-analysis works!</p>
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Análisis de Datos</h2>
+  
+    <!-- Clase de fila ajustada para asegurar tres columnas en pantallas medianas -->
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      <!-- Gráficos con datos simples -->
+      <div class="col" *ngFor="let chart of simpleCharts">
+        <div class="card h-100">
+          <div class="card-body">
+            <h5 class="card-title text-center">{{ chart.title }}</h5>
+            <canvas baseChart
+                    [data]="chart.data"
+                    [type]="chart.type"
+                    [options]="chartOptions">
+            </canvas>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Gráficos con datos complejos -->
+      <div class="col" *ngFor="let chart of complexCharts">
+        <div class="card h-100">
+          <div class="card-body">
+            <h5 class="card-title text-center">{{ chart.title }}</h5>
+            <canvas baseChart
+                    [data]="chart.data"
+                    [type]="chart.type"
+                    [options]="chartOptions">
+            </canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

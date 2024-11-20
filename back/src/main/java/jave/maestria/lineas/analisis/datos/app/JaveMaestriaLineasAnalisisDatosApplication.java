@@ -1,13 +1,13 @@
-package com.spl.cyclingSPL;
+package jave.maestria.lineas.analisis.datos.app;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class CyclingSplApplication {
+public class JaveMaestriaLineasAnalisisDatosApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(CyclingSplApplication.class, args);
+		SpringApplication.run(JaveMaestriaLineasAnalisisDatosApplication.class, args);
 	}
 
 }

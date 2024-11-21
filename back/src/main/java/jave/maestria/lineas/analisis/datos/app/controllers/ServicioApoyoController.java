@@ -39,14 +39,6 @@ public class ServicioApoyoController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/test")
-    public ResponseEntity<String> testPatch(
-
-            @RequestBody ServicioApoyo servicioActualizado)
-    {
-        return ResponseEntity.ok("PATCH endpoint funcionando correctamente" + servicioActualizado );
-    }
-
     @PutMapping("/actualizar")
     public ResponseEntity<ServicioApoyo> actualizarServicio(
             @RequestBody ServicioApoyo servicioActualizado) {

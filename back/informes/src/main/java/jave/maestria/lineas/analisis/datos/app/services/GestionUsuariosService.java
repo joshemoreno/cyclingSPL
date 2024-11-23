@@ -22,7 +22,7 @@ public class GestionUsuariosService {
     }
 
     public Map<String, Object> obtenerUsuariosPorPlan() {
-        // Llamamos al repositorio para obtener los usuarios agrupados por rol
+        // Llamamos al repositorio para obtener los usuarios agrupados por plan
         List<GestionUsuarios> usuarios = repository.contarUsuariosPorPlan();
 
         // Creamos un mapa para devolver los resultados con la clave "data"

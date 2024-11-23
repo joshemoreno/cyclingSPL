@@ -12,9 +12,9 @@ public interface GestionUsuariosRepository extends JpaRepository<GestionUsuarios
 
 
 
-    @Query("SELECT new GestionUsuarios(u.rol, COUNT(u.id)) " +
+    @Query("SELECT new GestionUsuarios(u.plan, COUNT(u.id)) " +
             "FROM GestionUsuarios u " +
-            "GROUP BY u.rol")
+            "GROUP BY u.plan")
     List<GestionUsuarios> contarUsuariosPorPlan();
 
 }

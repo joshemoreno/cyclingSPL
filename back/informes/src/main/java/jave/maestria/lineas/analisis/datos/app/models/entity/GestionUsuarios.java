@@ -3,10 +3,11 @@ package jave.maestria.lineas.analisis.datos.app.models.entity;
 
 import jakarta.persistence.*;
 
-import jakarta.persistence.*;
+import lombok.Data;
 
 @Entity
 @Table(name = "gestion_usuarios")
+@Data
 public class GestionUsuarios {
 
     @Id
@@ -21,66 +22,22 @@ public class GestionUsuarios {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "Rol", nullable = false)
-    private Rol rol;
+    private Plan plan;
 
-    public enum Rol {
+    public enum Plan {
         basic,
         estandar,
         premium
     }
 
-    // Constructor por defecto
     public GestionUsuarios() {}
 
-    // Constructor para la consulta personalizada
-    public GestionUsuarios(Rol rol, Long cantidad) {
-        this.rol = rol;
+    public GestionUsuarios(Plan plan, Long cantidad) {
+        this.plan = plan;
         this.cantidad = cantidad;
     }
 
-    // Campos no persistentes
     @Transient
     private Long cantidad;
-
-    public Long getCantidad() {
-        return cantidad;
-    }
-
-    public void setCantidad(Long cantidad) {
-        this.cantidad = cantidad;
-    }
-
-    // Getters y Setters de los demás campos
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getNombre() {
-        return nombre;
-    }
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public Rol getRol() {
-        return rol;
-    }
-
-    public void setRol(Rol rol) {
-        this.rol = rol;
-    }
 }
 

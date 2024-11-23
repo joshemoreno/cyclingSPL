@@ -1,6 +1,6 @@
 package jave.maestria.lineas.gestion.usuarios.models.enums;
 
-public enum Rol {
+public enum Plan {
     BASIC,
     ESTANDAR,
     PREMIUM

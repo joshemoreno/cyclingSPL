@@ -1,11 +1,12 @@
 import { Component, inject } from '@angular/core';
 import { Router, RouterLink, RouterModule } from '@angular/router';
 import { AuthService } from './services/auth.service';
+import { SpinComponent } from "./shared/spin/spin.component";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterLink,RouterModule],
+  imports: [RouterLink, RouterModule, SpinComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })

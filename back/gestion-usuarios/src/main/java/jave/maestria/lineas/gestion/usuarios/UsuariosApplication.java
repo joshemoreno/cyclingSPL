@@ -10,7 +10,7 @@ public class UsuariosApplication {
     public static void main(String[] args) {
         SpringApplication.run(UsuariosApplication.class, args);
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        String rawPassword = "password123";
+        String rawPassword = "123123";
         String encodedPassword = encoder.encode(rawPassword);
         System.out.println("Contraseña codificada: " + encodedPassword);
     }

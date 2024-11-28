@@ -1,9 +1,11 @@
 package jave.maestria.lineas.gestion.usuarios.controllers;
 
+import jave.maestria.lineas.gestion.usuarios.models.entity.AuthResponse;
 import jave.maestria.lineas.gestion.usuarios.models.entity.LoginRequest;
 import jave.maestria.lineas.gestion.usuarios.services.JwtService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -26,7 +28,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public String authenticateUser(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<AuthResponse> authenticateUser(@RequestBody LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         loginRequest.getEmail(),
@@ -36,6 +38,9 @@ public class AuthController {
         log.info(authentication.getAuthorities().toString());
 
         String token = jwtService.generateToken(authentication.getName(),authentication.getAuthorities());
-        return "Bearer " + token;
+
+        AuthResponse response = new AuthResponse(token);
+
+        return ResponseEntity.ok(response);
     }
 }

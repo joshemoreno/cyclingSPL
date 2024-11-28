@@ -52,7 +52,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             if (plan == null || !this.plans.contains(plan)) {
                 response.setStatus(HttpServletResponse.SC_FORBIDDEN); // 403 Forbidden
-                response.getWriter().write("Acceso denegado: falta el claim requerido.");
+                response.getWriter().write("Acceso denegado: No tiene el plan requerido.");
                 return;
             }
 

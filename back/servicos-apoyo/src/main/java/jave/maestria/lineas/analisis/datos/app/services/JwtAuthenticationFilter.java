@@ -49,7 +49,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             String plan = claims.get("plan", String.class);
 
             if (plan == null || !this.plans.contains(plan)) {    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-                response.getWriter().write("Acceso denegado: falta el claim requerido.");    return;}
+                response.getWriter().write("Acceso denegado: No tiene el plan requerido.");    return;}
 
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(

@@ -47,6 +47,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     .getBody();
 
             String username = claims.getSubject();
+
             String plan = claims.get("plan", String.class);
 
             if (plan == null || !this.plans.contains(plan)) {

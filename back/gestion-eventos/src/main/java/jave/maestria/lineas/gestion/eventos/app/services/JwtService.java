@@ -1,32 +1,45 @@
 package jave.maestria.lineas.gestion.eventos.app.services;
 
-import io.jsonwebtoken.security.Keys;
-import org.springframework.security.core.GrantedAuthority;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.stereotype.Service;
 
-import javax.crypto.SecretKey;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.stream.Collectors;
+import java.security.Key;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import javax.crypto.spec.SecretKeySpec;
 
 @Service
 public class JwtService {
 
-    public final SecretKey secretKey;
+    private static final String SECRET_KEY = "my_secret_key";
 
-    public JwtService() {
-        String fixedKey = "mySuperSecureAndLongEnoughKeyForHS512ThatIsAtLeast64CharactersLong";
-        this.secretKey = Keys.hmacShaKeyFor(fixedKey.getBytes());
+    public Key getSecretKey() {
+        return new SecretKeySpec(SECRET_KEY.getBytes(), SignatureAlgorithm.HS256.getJcaName());
     }
 
-    public SecretKey getSecretKey() {
-        return secretKey;
+    public String generateToken(String username, String rol) {
+        return Jwts.builder()
+                .setSubject(username)
+                .claim("rol", rol)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60)) // 1 hora
+                .signWith(getSecretKey(), SignatureAlgorithm.HS256)
+                .compact();
     }
 
-    public Collection<? extends GrantedAuthority> getAuthoritiesFromRoles(String roles) {
-        return Arrays.stream(roles.split(","))
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
+    public Claims parseToken(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(getSecretKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
+    public List<SimpleGrantedAuthority> getAuthoritiesFromRoles(String rol) {
+        return Collections.singletonList(new SimpleGrantedAuthority("ROLE_" + rol.toUpperCase()));
     }
 }

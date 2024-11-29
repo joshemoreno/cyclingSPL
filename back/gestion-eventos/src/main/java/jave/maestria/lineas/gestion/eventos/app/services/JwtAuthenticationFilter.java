@@ -1,7 +1,6 @@
 package jave.maestria.lineas.gestion.eventos.app.services;
 
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -10,10 +9,13 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
 
+@SuppressWarnings("unused")
 @Component
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
@@ -23,8 +25,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         this.jwtService = jwtService;
     }
 
+    @Value("#{'${plans}'.split(',')}")
+    private List<String> plans;
+
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
         final String authHeader = request.getHeader("Authorization");
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -35,14 +41,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String token = authHeader.substring(7);
 
         try {
-            Claims claims = Jwts.parserBuilder()
-                    .setSigningKey(jwtService.getSecretKey())
-                    .build()
-                    .parseClaimsJws(token)
-                    .getBody();
-
+            Claims claims = jwtService.parseToken(token);
             String username = claims.getSubject();
             String rol = claims.get("rol", String.class);
+            String plan = claims.get("plan", String.class);
+
+            if (!plans.contains(plan)) {
+                response.sendError(HttpServletResponse.SC_FORBIDDEN, "Plan no permitido");
+                return;
+            }
 
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
@@ -52,7 +59,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (Exception e) {
-            System.out.println("Token inválido: " + e.getMessage());
+            System.out.println("Error al procesar el token: " + e.getMessage());
         }
 
         filterChain.doFilter(request, response);

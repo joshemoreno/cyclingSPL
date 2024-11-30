@@ -2,7 +2,6 @@ package jave.maestria.lineas.gestion.usuarios.configuration;
 
 import jave.maestria.lineas.gestion.usuarios.services.CustomUserDetailsService;
 import jave.maestria.lineas.gestion.usuarios.services.JwtAuthenticationFilter;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

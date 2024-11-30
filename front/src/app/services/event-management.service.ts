@@ -1,27 +1,29 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable, signal } from '@angular/core';
 import { catchError, lastValueFrom } from 'rxjs';
-import { User } from '../types/User';
+import { Events } from '../types/Events';
 
 @Injectable({
   providedIn: 'root'
 })
-export class UserManagementService {
+export class EventManagementService {
   readonly httpClient = inject(HttpClient);
 
-  users = signal<User[] | null>(null);
+  events = signal<Events[] | null>(null);
+
+  readonly controller = '/api/eventos';
 
   async search() {
     await lastValueFrom(
       this.httpClient
-        .get<User[]>(`/listar`)
+        .get<Events[]>(`${this.controller}`)
         .pipe(
           catchError((error) => {
             throw error;
           }),
         ),
     ).then(async (res) => {
-      this.users.set(res);
+      this.events.set(res);
     });
   }
 
@@ -30,7 +32,7 @@ export class UserManagementService {
       this.httpClient
         .post<{
           result: unknown;
-        }>(`/crear`, data)
+        }>(`${this.controller}/crear`, data)
         .pipe(
           catchError((error) => {
             throw error;
@@ -44,7 +46,21 @@ export class UserManagementService {
       this.httpClient
         .put<{
           result: unknown;
-        }>(`/editar/${data.id}`, data)
+        }>(`${this.controller}/actualizar/${data.id}`, data)
+        .pipe(
+          catchError((error) => {
+            throw error;
+          }),
+        ),
+    );
+  }
+
+  async delete(id: number) {
+    await lastValueFrom(
+      this.httpClient
+        .delete<{
+          result: unknown;
+        }>(`${this.controller}/eliminar/${id}`)
         .pipe(
           catchError((error) => {
             throw error;

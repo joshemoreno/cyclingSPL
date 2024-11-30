@@ -1,14 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
-
-interface Ticket {
-  id: number;
-  customerName: string;
-  bicycleType: string;
-  issueDescription: string;
-  status: string; // Ejemplo: 'Abierto', 'En Proceso', 'Cerrado'
-}
-
+import { ApoyoManagementService } from '../../services/apoyo-management.service';
+import { Apoyo } from '../../types/Apoyo';
 
 @Component({
   selector: 'app-support-services',
@@ -18,52 +11,46 @@ interface Ticket {
   styleUrl: './support-services.component.css'
 })
 export class SupportServicesComponent {
-  tickets: Ticket[] = [
-    {
-      id: 1,
-      customerName: 'Carlos López',
-      bicycleType: 'Montaña',
-      issueDescription: 'Falla en los frenos',
-      status: 'Abierto'
-    },
-    {
-      id: 2,
-      customerName: 'Ana Martínez',
-      bicycleType: 'Urbana',
-      issueDescription: 'Cadena rota',
-      status: 'En Proceso'
-    }
-  ];
+
+  readonly apoyoService = inject(ApoyoManagementService);
+
+  readonly servicios = this.apoyoService.servicios;
+
+  async ngOnInit(): Promise<void> {
+    await this.apoyoService.search();    
+  }
 
   // Método para agregar un nuevo ticket
-  openAddTicket() {
-    const newTicket: Ticket = {
-      id: this.tickets.length + 1,
-      customerName: prompt('Ingrese el nombre del cliente') || 'Cliente desconocido',
-      bicycleType: prompt('Ingrese el tipo de bicicleta') || 'Tipo desconocido',
-      issueDescription: prompt('Describa el problema') || 'Sin descripción',
-      status: 'Abierto'
+  async openAddTicket() {
+    const newTicket: Apoyo = {
+      nombreDelCliente: prompt('Ingrese el nombre del cliente') || 'Cliente desconocido',
+      tipoDeBicicleta: prompt('Ingrese el tipo de bicicleta') || 'Tipo desconocido',
+      descripcionProblema: prompt('Describa el problema') || 'Sin descripción',
+      estado: 'pendiente'
     };
-    this.tickets.push(newTicket);
+    await this.apoyoService.create(newTicket);
+    await this.apoyoService.search();
   }
 
   // Método para editar un ticket existente
-  openEditTicket(ticket: Ticket) {
-    const updatedCustomerName = prompt('Actualizar nombre del cliente', ticket.customerName);
-    const updatedBicycleType = prompt('Actualizar tipo de bicicleta', ticket.bicycleType);
-    const updatedIssueDescription = prompt('Actualizar descripción del problema', ticket.issueDescription);
-    const updatedStatus = prompt('Actualizar estado (Abierto, En Proceso, Cerrado)', ticket.status);
+  async openEditTicket(ticket: Apoyo) {
+    const updatedCustomerName = prompt('Actualizar nombre del cliente', ticket.nombreDelCliente);
+    const updatedBicycleType = prompt('Actualizar tipo de bicicleta', ticket.tipoDeBicicleta);
+    const updatedIssueDescription = prompt('Actualizar descripción del problema', ticket.descripcionProblema);
+    const updatedStatus = prompt('Actualizar estado (pendiente, en_progreso, resuelto)', ticket.estado);
 
     if (updatedCustomerName && updatedBicycleType && updatedIssueDescription && updatedStatus) {
-      ticket.customerName = updatedCustomerName;
-      ticket.bicycleType = updatedBicycleType;
-      ticket.issueDescription = updatedIssueDescription;
-      ticket.status = updatedStatus;
+      ticket.nombreDelCliente = updatedCustomerName;
+      ticket.tipoDeBicicleta = updatedBicycleType;
+      ticket.descripcionProblema = updatedIssueDescription;
+      ticket.estado = updatedStatus;
     }
+    await this.apoyoService.update(ticket);
+    await this.apoyoService.search();
   }
 
-  // Método para eliminar un ticket
-  deleteTicket(id: number) {
-    this.tickets = this.tickets.filter(ticket => ticket.id !== id);
+  async deleteTicket(id: number) {
+    await this.apoyoService.delete(id);
+    await this.apoyoService.search();
   }
 }

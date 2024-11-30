@@ -32,22 +32,11 @@ public class EventosServiceImpl implements IEventosservice {
     public Eventos guardar(Eventos evento) {
         return eventRepository.save(evento);
     }
-
-    @Override
-    public Eventos crearEvento(String nombre, int numero, String email) {
-        Eventos evento = new Eventos();
-        evento.setNombreDelEvento(nombre);
-        evento.setNumero(numero);
-        evento.setCorreo(email);
-        return eventRepository.save(evento);
-    }
     
     @Override
     public Eventos actualizarEvento(Long id, Eventos evento) {
         return eventRepository.findById(id).map(e -> {
             e.setNombreDelEvento(evento.getNombreDelEvento());
-            e.setNumero(evento.getNumero());
-            e.setCorreo(evento.getCorreo());
             e.setFecha(evento.getFecha());
             e.setUbicacion(evento.getUbicacion());
             return eventRepository.save(e);

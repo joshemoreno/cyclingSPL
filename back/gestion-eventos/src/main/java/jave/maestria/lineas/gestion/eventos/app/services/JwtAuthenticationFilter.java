@@ -1,6 +1,7 @@
 package jave.maestria.lineas.gestion.eventos.app.services;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,12 +26,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         this.jwtService = jwtService;
     }
 
-    @Value("#{'${plans}'.split(',')}")
-    private List<String> plans;
+    @Value("#{'${plans}'.split(',')}")private List<String> plans;
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         final String authHeader = request.getHeader("Authorization");
 
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
@@ -41,25 +40,27 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final String token = authHeader.substring(7);
 
         try {
-            Claims claims = jwtService.parseToken(token);
+            Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(jwtService.getSecretKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+
             String username = claims.getSubject();
-            String rol = claims.get("rol", String.class);
             String plan = claims.get("plan", String.class);
 
-            if (!plans.contains(plan)) {
-                response.sendError(HttpServletResponse.SC_FORBIDDEN, "Plan no permitido");
-                return;
-            }
+            if (plan == null || !this.plans.contains(plan)) {    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                response.getWriter().write("Acceso denegado: No tiene el plan requerido.");    return;}
 
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        username, null, jwtService.getAuthoritiesFromRoles(rol));
+                        username, null, jwtService.getAuthoritiesFromRoles(plan));
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (Exception e) {
-            System.out.println("Error al procesar el token: " + e.getMessage());
+            System.out.println("Token inválido: " + e.getMessage());
         }
 
         filterChain.doFilter(request, response);

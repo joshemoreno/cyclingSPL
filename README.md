@@ -66,3 +66,11 @@ CREATE TABLE gestion_usuarios (
     Password VARCHAR(255) NOT NULL,
     Plan ENUM('BASIC', 'PREMIUM', 'STANDARD') NOT NULL
 );
+```
+
+## Árbol de Características
+![Árbol de Características](doc/diagrama.jpg "Árbol de Características")
+
+## Componentes
+![componentes](doc/Diagrama%201.jpg "componentes")
+

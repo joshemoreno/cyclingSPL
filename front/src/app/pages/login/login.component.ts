@@ -16,9 +16,12 @@ export class LoginComponent {
 
   constructor(private authService: AuthService, private router: Router) {}
 
-  onLogin() {
-    if (this.authService.login(this.email, this.password)) {
-      this.router.navigate(['/user-management']); // Redirigir a la página principal o dashboard
+  async onLogin() {
+    const isLoggedIn = await this.authService.login({email:this.email , password:this.password});
+    console.log(isLoggedIn);
+    
+    if (isLoggedIn) {
+      this.router.navigate(['/user-management']);
     } else {
       alert('Credenciales incorrectas. Inténtalo de nuevo.');
     }

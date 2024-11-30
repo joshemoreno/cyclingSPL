@@ -15,16 +15,16 @@
         </tr>
       </thead>
       <tbody>
-        @for (ticket of tickets; track $index) {
+        @for (ticket of servicios(); track $index) {
             <tr>
               <td>{{ ticket.id }}</td>
-              <td>{{ ticket.customerName }}</td>
-              <td>{{ ticket.bicycleType }}</td>
-              <td>{{ ticket.issueDescription }}</td>
-              <td>{{ ticket.status }}</td>
+              <td>{{ ticket.nombreDelCliente }}</td>
+              <td>{{ ticket.tipoDeBicicleta }}</td>
+              <td>{{ ticket.descripcionProblema}}</td>
+              <td>{{ ticket.estado }}</td>
               <td>
                 <button class="btn btn-warning btn-sm" (click)="openEditTicket(ticket)">Editar</button>
-                <button class="btn btn-danger btn-sm" (click)="deleteTicket(ticket.id)">Eliminar</button>
+                <button class="btn btn-danger btn-sm" (click)="deleteTicket(ticket.id!)">Eliminar</button>
               </td>
             </tr>
         }

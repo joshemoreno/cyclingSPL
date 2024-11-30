@@ -1,12 +1,7 @@
 import { DatePipe } from '@angular/common';
-import { Component } from '@angular/core';
-
-interface Event {
-  id: number;
-  name: string;
-  date: Date;
-  location: string;
-}
+import { Component, inject, OnInit } from '@angular/core';
+import { EventManagementService } from '../../services/event-management.service';
+import { Events } from '../../types/Events';
 
 @Component({
   selector: 'app-event-management',
@@ -15,34 +10,43 @@ interface Event {
   templateUrl: './event-management.component.html',
   styleUrl: './event-management.component.css'
 })
-export class EventManagementComponent {
-  events: Event[] = [
-    { id: 1, name: 'Ruta 5KM', date: new Date('2023-08-15'), location: 'Pance' },
-    { id: 2, name: 'Ruta 50KM', date: new Date('2022-09-10'), location: 'Bogotá' },
-  ];
+export class EventManagementComponent implements OnInit{
 
-  openAddEvent() {
-    const newEvent: Event = {
+  readonly enventService = inject(EventManagementService);
+
+  readonly events = this.enventService.events;
+
+  async ngOnInit(): Promise<void> {
+    await this.enventService.search();    
+  }
+
+  async openAddEvent() {
+    const newEvent: Events = {
       id: this.events.length + 1,
-      name: prompt("Ingrese el nombre del evento") || "Nuevo Evento",
-      date: new Date(prompt("Ingrese la fecha del evento (YYYY-MM-DD)") || new Date().toISOString()),
-      location: prompt("Ingrese la ubicación del evento") || "Ubicación desconocida"
+      nombreDelEvento: prompt("Ingrese el nombre del evento") || "Nuevo Evento",
+      fecha: new Date(prompt("Ingrese la fecha del evento (YYYY-MM-DD)") || new Date().toISOString()),
+      ubicacion: prompt("Ingrese la ubicación del evento") || "Ubicación desconocida"
     };
-    this.events.push(newEvent);
+    await this.enventService.create(newEvent);
+    await this.enventService.search();
   }
 
-  openEditEvent(event: Event) {
-    const updatedName = prompt("Actualizar nombre del evento", event.name);
-    const updatedDate = prompt("Actualizar fecha del evento (YYYY-MM-DD)", event.date.toISOString().substring(0, 10));
-    const updatedLocation = prompt("Actualizar ubicación del evento", event.location);
+  async openEditEvent(event: Events) {
+    const aux = event.fecha.toString();
+    const updatedName = prompt("Actualizar nombre del evento", event.nombreDelEvento);
+    const updatedDate = prompt("Actualizar fecha del evento (YYYY-MM-DD)", aux.substring(0, 10));
+    const updatedLocation = prompt("Actualizar ubicación del evento", event.ubicacion);
     if (updatedName && updatedDate && updatedLocation) {
-      event.name = updatedName;
-      event.date = new Date(updatedDate);
-      event.location = updatedLocation;
+      event.nombreDelEvento = updatedName;
+      event.fecha = new Date(updatedDate);
+      event.ubicacion = updatedLocation;
     }
+    await this.enventService.create(event);
+    await this.enventService.search();
   }
 
-  deleteEvent(id: number) {
-    this.events = this.events.filter(event => event.id !== id);
+  async deleteEvent(id: number) {
+    await this.enventService.delete(id);
+    await this.enventService.search();
   }
 }

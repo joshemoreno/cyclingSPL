@@ -1,13 +1,27 @@
-# Inicialización de Base de Datos MySQL con Usuarios
+# Sistema cyclingSPL
 
-Este proyecto incluye un script Bash para configurar automáticamente un contenedor Docker con MySQL, inicializar la base de datos y registrar usuarios predefinidos.
+Este proyecto incluye:
+1. Un script Bash para configurar automáticamente un contenedor Docker con MySQL y registrar usuarios predefinidos.
+2. Un backend desarrollado en **Spring Boot** (Java 17) para gestionar las operaciones CRUD de usuarios.
+3. Un frontend en **Angular** (18) para interactuar con el sistema.
+
+---
 
 ## Requisitos previos
 
 1. **Docker instalado**  
-   Asegúrate de tener Docker instalado en tu máquina. Si no lo tienes, sigue las instrucciones de instalación en [la página oficial de Docker](https://www.docker.com/get-started).
+   Descárgalo de [Docker](https://www.docker.com/get-started).
 
-2. **Acceso al directorio del proyecto**  
+2. **Node.js y npm instalados**  
+   Descárgalo de [Node.js](https://nodejs.org/).
+
+3. **Java 17 instalado**  
+   Descárgalo de [AdoptOpenJDK](https://adoptium.net/) o la distribución de tu preferencia.
+
+4. **Maven instalado**  
+   Asegúrate de que `mvn` esté disponible en tu terminal.
+
+5. **Acceso al directorio del proyecto**  
    Clona o descarga este repositorio en tu máquina local.
 
 ---
@@ -23,14 +37,26 @@ Script Bash para:
 
 ### 2. `init_users.sql`
 
-Archivo SQL para inicializar la base de datos con usuarios predefinidos. Incluye comandos para:
-- Insertar usuarios en la tabla `gestion_usuarios`.
+Archivo SQL para inicializar la base de datos con usuarios predefinidos.
+
+### 3. Proyecto Spring Boot (`/back`)
+
+El backend desarrollado en Spring Boot incluye:
+- Controladores para las operaciones CRUD.
+- Conexión con la base de datos MySQL.
+- Configuración de seguridad básica (opcional).
+
+### 4. Proyecto Angular (`/front`)
+
+El frontend incluye:
+- Componentes para mostrar y gestionar usuarios.
+- Conexión con el backend para las operaciones CRUD.
 
 ---
 
 ## Tabla de Base de Datos
 
-La tabla utilizada en este proyecto se define como:
+La tabla utilizada para MySQL se define como:
 
 ```sql
 CREATE TABLE gestion_usuarios (
